@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const foodSchema = mongoose.Schema({
+const productSchema = mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -12,7 +12,7 @@ const foodSchema = mongoose.Schema({
     categories: {
         type: String,
         required: true,
-        enum: ['veg', 'non-veg']
+        enum: ['Electronics', 'Cameras', 'Laptops', 'Accessories', 'Headphones', 'Food', 'Books', 'Clothes/Shoes', 'Beauty/Health', 'Sports', 'Outdoor', 'Home']
     },
     image: {
         type: String,
@@ -24,4 +24,4 @@ const foodSchema = mongoose.Schema({
     },
 })
 
-export const Food = mongoose.model("Food", foodSchema);
+export const Product = mongoose.model("Product", productSchema);

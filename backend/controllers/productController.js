@@ -1,8 +1,8 @@
-import { Food } from "../models/foodModel.js";
+import { Product } from "../models/productModel.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
-// add food controller
-const addFoodController = asyncHandler(async (req, res) => {
+// add product controller
+const addProductController = asyncHandler(async (req, res) => {
     try {
         const { name, description, categories, image, price } = req.body;
         if (!name || !description || !categories || !image || !price) {
@@ -12,7 +12,7 @@ const addFoodController = asyncHandler(async (req, res) => {
             });
         }
 
-        const food = await Food.create({
+        const product = await Product.create({
             name,
             description,
             categories,
@@ -22,21 +22,21 @@ const addFoodController = asyncHandler(async (req, res) => {
 
         res.status(201).json({
             success: true,
-            message: "Food added successfully",
-            data: food
+            message: "Product added successfully",
+            data: product
         });
 
     } catch (error) {
-        console.error("Error in add food: ", error);
+        console.error("Error in add product: ", error);
         res.status(500).json({
             success: false,
-            message: `Error in add food ${error.message}`
+            message: `Error in add product ${error.message}`
         });
     }
 });
 
-// update food controller
-const updateFoodController = asyncHandler(async (req, res) => {
+// update product controller
+const updateProductController = asyncHandler(async (req, res) => {
     try {
         const foodId = req.params.id;
         const { name, description, categories, image, price } = req.body;
@@ -55,7 +55,7 @@ const updateFoodController = asyncHandler(async (req, res) => {
             });
         }
 
-        const updatedFood = await Food.findByIdAndUpdate(
+        const updateProduct = await Product.findByIdAndUpdate(
             { _id: foodId },
             updateData,
             { new: true }
@@ -63,62 +63,62 @@ const updateFoodController = asyncHandler(async (req, res) => {
 
         res.status(200).json({
             success: true,
-            message: "Food updated successfully",
-            data: updatedFood
+            message: "Product updated successfully",
+            data: updateProduct
         });
 
     } catch (error) {
-        console.error("Error in update food: ", error);
+        console.error("Error in update Product: ", error);
         res.status(500).json({
             success: false,
-            message: `Error in update food: ${error.message}`
+            message: `Error in update Product: ${error.message}`
         });
     }
 });
 
-// get all foods controller
-const getAllFoodsController = asyncHandler(async (req, res) => {
+// get all products controller
+const getAllProductsController = asyncHandler(async (req, res) => {
     try {
-        const foods = await Food.find();
+        const Products = await Product.find();
         res.status(200).json({
             success: true,
-            message: "Foods fetched successfully",
-            data: foods
+            message: "Products fetched successfully",
+            data: Products
         });
     } catch (error) {
-        console.error("Error in get all foods: ", error);
+        console.error("Error in get all Products: ", error);
         res.status(500).json({
             success: false,
-            message: `Error in get all foods: ${error.message}`
+            message: `Error in get all Products: ${error.message}`
         });
     }
- });
+});
 
-// delete food controller
-const deleteFoodController = asyncHandler(async (req, res) => {
+// delete product controller
+const deleteProductController = asyncHandler(async (req, res) => {
     try {
-        const foodId = req.params.id;
-        const food = await Food.findById(foodId);
+        const productId = req.params.id;
+        const food = await Product.findById(foodId);
         if (!food) {
             return res.status(400).json({
                 success: false,
-                message: "Food not found"
+                message: "Product not found"
             });
         }
 
-        await Food.findByIdAndDelete(foodId);
+        await Product.findByIdAndDelete(productId);
         res.status(200).json({
             success: true,
-            message: "Food deleted successfully"
+            message: "Product deleted successfully"
         });
 
     } catch (error) {
-        console.error("Error in delete food: ", error);
+        console.error("Error in delete Product: ", error);
         res.status(500).json({
             success: false,
-            message: `Error in delete food: ${error.message}`
+            message: `Error in delete Product: ${error.message}`
         });
     }
- });
+});
 
-export { addFoodController, updateFoodController, getAllFoodsController, deleteFoodController };
+export { addProductController, updateProductController, getAllProductsController, deleteProductController };

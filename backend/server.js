@@ -3,7 +3,8 @@ import cors from 'cors';
 import connectDB from './db/index.js'
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js'
-import foodRoutes from './routes/foodRoutes.js'
+import productRoutes from './routes/productRoutes.js'
+import cartRoutes from './routes/cartRouets.js'
 
 // config
 dotenv.config()
@@ -31,7 +32,8 @@ app.get('/', (req, res) => {
     res.send('Hello World');
 })
 app.use('/api/v1/users', userRoutes);
-app.use('/api/v1/foods', foodRoutes);
+app.use('/api/v1/products', productRoutes);
+app.use('/api/v1/carts', cartRoutes);
 
 // listen
 app.listen(port, () => {
