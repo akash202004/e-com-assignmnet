@@ -4,11 +4,20 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 // add product controller
 const addProductController = asyncHandler(async (req, res) => {
     try {
-        const { name, description, categories, image, price } = req.body;
-        if (!name || !description || !categories || !image || !price) {
+        const { name, description, categories, price } = req.body;
+        if (!name || !description || !categories || !price) {
             return res.status(400).json({
                 success: false,
                 message: "Please fill all fields"
+            });
+        }
+
+        let profileImage = '';
+        if (req.file) {
+            profileImage = req.file.filename;
+        } else {
+            return res.status(400).json({
+                message: 'Profile image is required.'
             });
         }
 
@@ -16,7 +25,7 @@ const addProductController = asyncHandler(async (req, res) => {
             name,
             description,
             categories,
-            image,
+            image: profileImage,
             price
         })
 
@@ -98,7 +107,7 @@ const getAllProductsController = asyncHandler(async (req, res) => {
 const deleteProductController = asyncHandler(async (req, res) => {
     try {
         const productId = req.params.id;
-        const food = await Product.findById(foodId);
+        const food = await Product.findById(productId);
         if (!food) {
             return res.status(400).json({
                 success: false,

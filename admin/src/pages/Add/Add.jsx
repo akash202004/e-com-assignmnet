@@ -5,59 +5,57 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Add = ({ url }) => {
-  const [image, setImage] = useState(null); 
+  const [image, setImage] = useState(false);
   const [data, setData] = useState({
     name: "",
     description: "",
     price: "",
-    category: "Electronics",  
+    categories: "Electronics",
   });
 
   const imageUrl = image ? URL.createObjectURL(image) : assets.upload_area;
 
+  // Handle input change for dynamic fields
   const onChangeHandler = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
-    setData((prevData) => ({ ...prevData, [name]: value }));
+    const { name, value } = event.target;
+    setData({ ...data, [name]: value });
   };
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
 
-    if (!data.name || !data.description || !data.price || !image) {
-      toast.error("Please fill in all fields");
-      return;
-    }
-
     const formData = new FormData();
+    formData.append("image", image);
     formData.append("name", data.name);
     formData.append("description", data.description);
-    formData.append("price", Number(data.price));  
-    formData.append("category", data.category);  
-    formData.append("image", image);
+    formData.append("price", data.price);
+    formData.append("categories", data.categories);
+    console.log(formData);
 
     try {
-      const response = await axios.post(`http://localhost:3000/api/v1/products/create`, formData, {
-        headers: {
-          Authorization: `Bearer Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDI1MTc1NTljMWI3ZTNkNTgzMTA3MCIsImlhdCI6MTcyODIwNTE4MywiZXhwIjoxNzI5NTAxMTgzfQ.XFhmHJ8bObglx-B2US-PCtmSnwHMW8SZtrQglzzRsTk`,
+      const response = await axios.post(
+        `${url}products/create`,
+        formData,
+        {
+          headers: {
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDI1MTc1NTljMWI3ZTNkNTgzMTA3MCIsImlhdCI6MTcyODI3NzM3NCwiZXhwIjoxNzI5NTczMzc0fQ.8EAdFRRaJ0VP2bvYYXYmaadArYt5Xx9GOLMl0mOfPMg",
+          },
         },
-      });
-
+      );
       if (response.data.success) {
         setData({
           name: "",
           description: "",
           price: "",
-          category: "Electronics", 
+          categories: "Electronics",
         });
-        setImage(null);
+        setImage(false);
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
       toast.error("Error adding product");
-      console.error("Error adding product:", error);
     }
   };
 
@@ -78,31 +76,35 @@ const Add = ({ url }) => {
           />
         </div>
         <div className="add-product-name flex-col">
-          <p>Product name</p>
+          <p>Product Name</p>
           <input
-            onChange={onChangeHandler}
-            value={data.name}
-            type="text"
             name="name"
+            value={data.name}
+            onChange={onChangeHandler}
+            type="text"
             placeholder="Type here"
             required
           />
         </div>
         <div className="add-product-description flex-col">
-          <p>Product description</p>
+          <p>Product Description</p>
           <textarea
             name="description"
-            onChange={onChangeHandler}
             value={data.description}
+            onChange={onChangeHandler}
             rows="6"
             placeholder="Write content here"
             required
-          ></textarea>
+          />
         </div>
         <div className="add-category-price">
           <div className="add-category flex-col">
-            <p>Product category</p>
-            <select name="category" onChange={onChangeHandler} value={data.category}>
+            <p>Product Category</p>
+            <select
+              name="categories"
+              value={data.categories}
+              onChange={onChangeHandler}
+            >
               <option value="Electronics">Electronics</option>
               <option value="Cameras">Cameras</option>
               <option value="Laptops">Laptops</option>
@@ -120,10 +122,10 @@ const Add = ({ url }) => {
           <div className="add-price flex-col">
             <p>Product Price</p>
             <input
-              onChange={onChangeHandler}
-              value={data.price}
-              type="number"
               name="price"
+              value={data.price}
+              onChange={onChangeHandler}
+              type="number"
               placeholder="$20"
               required
             />
